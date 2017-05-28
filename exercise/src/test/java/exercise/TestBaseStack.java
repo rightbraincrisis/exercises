@@ -11,9 +11,14 @@ import org.junit.Test;
 public class TestBaseStack {
 
 	public static Calculator calculator;
+	
+	/**
+	 * 
+	 * Test class: TODO
+	 */
+	
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		
+	public static void setUpBeforeClass() throws Exception {	
 		calculator = new Calculator(DataType.DOUBLE);
 	}
 
@@ -34,6 +39,4 @@ public class TestBaseStack {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-
 }
