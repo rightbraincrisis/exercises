@@ -13,7 +13,8 @@ public class Main {
 			switch (args[0]){
 				case "DOUBLE": dataType = DataType.DOUBLE; break;
 				case "BIGDECIMAL": dataType = DataType.BIGDECIMAL; break;
-				//Extension:  Usage message
+				default : System.out.println("Invalid context: please choose BIGDECIMAL or DOUBLE");
+				System.exit(-1);
 			}
 		}
 		Calculator calculator = new Calculator(dataType);
@@ -23,6 +24,8 @@ public class Main {
 				System.out.println("");
 				String line = new BufferedReader(new InputStreamReader(System.in)).readLine();
 				canContinue = calculator.process(line);
+				// in case of exception calculator.process returns false
+				// and that brings in the termination of this loop.
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

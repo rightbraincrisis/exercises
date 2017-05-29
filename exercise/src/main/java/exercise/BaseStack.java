@@ -12,6 +12,12 @@ import exercise.exception.InsufficientElementsException;
 abstract class BaseStack {
 	
 	private Deque<String> stack;
+	/**
+	 *  Deque is chosen because it gives true functionality of 
+	 *  stack using Linkedlist. The class Stack<E> provided by java is just an 
+	 *  extension of Vector.
+	 */
+	
 	private static final String CLEAR = "clear";
 	private static final String UNDO = "undo";
 	
@@ -64,7 +70,7 @@ abstract class BaseStack {
 	}
 
 	protected void setStack(Deque<String> stack) {
-		// clone
+		// cloning
 		stack.forEach(element->this.stack.add(element));
 	}
 
@@ -72,10 +78,6 @@ abstract class BaseStack {
 		return  element.equals(UNDO);
 	}
 	
-	public void executeUndoCommand() {
-		stack.pop();
-	}
-
 	public boolean isClearCommand(String element) {
 		return  element.equals(CLEAR);
 	}

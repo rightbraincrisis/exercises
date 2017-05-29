@@ -13,7 +13,10 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	
 	private static final String CUSTOM = "custom:";
 	private static int SCALE = ConfigurationVariables.getNumber("BIGDECIMAL.storageScale");
-	private static RoundingMode ROUNDING_MODE= RoundingMode.HALF_UP; //Extension possible: to externalise
+	private static RoundingMode ROUNDING_MODE = RoundingMode.FLOOR; //Extension possible: to externalise
+	private static String SUPPORTED_OPERATIONS = ConfigurationVariables.getString("BIGDECIMAL.supportedBinaryOperations");
+	private static String SUPPORTED_UNARY_OPERATIONS = ConfigurationVariables.getString("BIGDECIMAL.supportedUnaryOperations");
+	
 	
 	public String getMethodName(String op){
 		
@@ -108,7 +111,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	
 	@Override
 	public boolean isOperatorBinary(String operator) {
-		String[] operators = { "+", "-", "/", "*" };
+		String [] operators = SUPPORTED_OPERATIONS.split(" ");
 		if (Arrays.asList(operators).contains(operator))
 			return true;
 		return false;
@@ -116,7 +119,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 
 	@Override
 	public boolean isOperatorUnary(String operator) {
-		String[] operators = { "sqrt", "negate" };
+		String [] operators = SUPPORTED_UNARY_OPERATIONS.split(" ");
 		if (Arrays.asList(operators).contains(operator))
 			return true;
 		return false;
@@ -124,7 +127,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	
 	
 	public BigDecimal sqrt(BigDecimal b1) throws InvalidNumberException{
-		// TODO: handle negative number
+		// handle negative number
 		if(b1.signum() == -1) throw new InvalidNumberException("Positive Number expected");
 		return BigDecimalSqrtHelper.bigSqrt(b1).setScale(SCALE, ROUNDING_MODE);
 	}
