@@ -13,7 +13,7 @@ public class Main {
 			switch (args[0]){
 				case "DOUBLE": dataType = DataType.DOUBLE; break;
 				case "BIGDECIMAL": dataType = DataType.BIGDECIMAL; break;
-				//TODO: add appropriate Usage message
+				//Extension:  Usage message
 			}
 		}
 		Calculator calculator = new Calculator(dataType);

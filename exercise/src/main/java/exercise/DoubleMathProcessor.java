@@ -43,7 +43,7 @@ public class DoubleMathProcessor extends BaseMathProcessor {
 		return String.valueOf(result);
 	}
 
-	//TODO: Check if the next 3 methods can be pushed to Base class.
+	//Extension: The next 3 methods can be pushed to Base class.
 	
 	@Override
 	public boolean isValidOperand(String element) {

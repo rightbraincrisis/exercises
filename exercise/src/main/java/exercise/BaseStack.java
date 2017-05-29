@@ -52,7 +52,7 @@ abstract class BaseStack {
 	}
 	
 	public boolean isCommand(String command) {
-		//TODO: externalise this
+		//Extension possible: externalisation of commands
 		String[] operators = { CLEAR };
 		if (Arrays.asList(operators).contains(command))
 			return true;

@@ -3,8 +3,6 @@ package exercise;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 
 import exercise.exception.DivideByZeroException;
@@ -12,29 +10,14 @@ import exercise.exception.InvalidNumberException;
 import exercise.exception.InvalidOperatorOrEquation;
 
 public class BigDecimalMathProcessor extends BaseMathProcessor {
-/*	public static void main (String[] args){
-		BigDecimal bd1 = new BigDecimal("11");
-		BigDecimal bd2 = new BigDecimal("2");
-		String bd1 = "11";
-		String bd2 = "1212";
-		String operator = "add";
-
-		BigDecimalMathProcessor processor = new BigDecimalMathProcessor();
-		processor.performBinaryOperation("+", bd1, bd2);
-		processor.performBinaryOperation("-", bd1, bd2);
-		processor.performBinaryOperation("*", bd1, bd2);
-		processor.performBinaryOperation("/", bd1, bd2);
-		processor.performUnaryOperation("negate", bd1);		
-		processor.performUnaryOperation("sqrt", bd2);
-		
-		
-	}
-	*/
 	
+	private static final String CUSTOM = "custom:";
 	private static int SCALE = ConfigurationVariables.getNumber("BIGDECIMAL.storageScale");
-	private static RoundingMode ROUNDING_MODE= RoundingMode.HALF_UP; //TODO: externalise
+	private static RoundingMode ROUNDING_MODE= RoundingMode.HALF_UP; //Extension possible: to externalise
 	
 	public String getMethodName(String op){
+		
+		// extension: externalisation possible
 		String methodName = null;
 		switch (op) {
 		case "+":  methodName = "add"; break;
@@ -56,11 +39,11 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 		BigDecimal result = null;
 		try {
 	        Method m1 = null;
-	        if(methodName.contains("custom:")){
+	        if(methodName.contains(CUSTOM)){
 	        	Class<?>[] arguments = {BigDecimal.class, BigDecimal.class};
 	        	Object[] parameters = {b1,b2};
 
-	        	methodName = methodName.replace("custom:","");
+	        	methodName = methodName.replace(CUSTOM,"");
 	        	m1 = this.getClass().getMethod(methodName, arguments);
 	        	result = (BigDecimal) m1.invoke(this, parameters);
 	        }else{
@@ -68,7 +51,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	        	result = (BigDecimal) m1.invoke(b1, b2);
 	        }    
 	        	        
-	      //TODO: fix the exception of div by zero
+	      //Common exception: Because the action of the exception is same.
 	    }  catch (Exception e) {
 	        throw new InvalidOperatorOrEquation("No such operation / Divide by zero / Invalid operand");
 	    } 
@@ -84,9 +67,9 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 		BigDecimal result = null;
 		try {
 	        Method m1 = null;
-	        if(methodName.contains("custom:")){
+	        if(methodName.contains(CUSTOM)){
 	       
-	        	methodName = methodName.replace("custom:","");
+	        	methodName = methodName.replace(CUSTOM,"");
 	        	m1 = this.getClass().getMethod(methodName, BigDecimal.class);
 	        	result = (BigDecimal) m1.invoke(this, b1);
 	        }else{
@@ -98,7 +81,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 
 	    }
 		catch (Exception e) {
-	    	//TODO: don't eat the exceptions fix it
+	    	//Custom common exception because the handling strategy is same.
 	    	throw new InvalidOperatorOrEquation(e.getMessage());
 	    } 			
 		return result.toPlainString();		
@@ -106,7 +89,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	
 	public BigDecimal divider(BigDecimal b1, BigDecimal b2) throws DivideByZeroException{
 		if(b1.signum() == 0) return BigDecimal.ZERO;
-		if(b2.signum() == 0) throw new DivideByZeroException("Divide by zero"); //TODO: throw exception
+		if(b2.signum() == 0) throw new DivideByZeroException("Divide by zero"); 
 		
 		BigDecimal result = b1.divide(b2,SCALE, ROUNDING_MODE);
 		return result;
