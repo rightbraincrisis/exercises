@@ -16,7 +16,7 @@ public class Caretaker {
     }
 
     public BaseStack getMemento() {
-    	mementos.pop();
+    	if(!mementos.isEmpty()) mementos.pop();
         return mementos.peek();
     }
     

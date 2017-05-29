@@ -42,7 +42,13 @@ public class Calculator {
 				result = false; break;
 			}
 		}
-		stack.display();
+		
+		if(stack != null) stack.display();
+		else{
+			System.out.println("stack: ");
+			result = false;
+		}
+		
 		return result;
 	}
 
