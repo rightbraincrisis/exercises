@@ -19,6 +19,8 @@ abstract class BaseStack {
 		stack = new LinkedList<>();
 	}
 	
+
+
 	public void push(String bd){
 		stack.push(bd);
 	}
@@ -44,7 +46,6 @@ abstract class BaseStack {
 
 	public void executeCommand(String element) {
 		switch (element){
-		case UNDO: stack.pop();break; 
 		case CLEAR: stack.clear();break; 
 		default: // configuration never allow this to occur 		
 		}
@@ -52,7 +53,7 @@ abstract class BaseStack {
 	
 	public boolean isCommand(String command) {
 		//TODO: externalise this
-		String[] operators = { UNDO , CLEAR };
+		String[] operators = { CLEAR };
 		if (Arrays.asList(operators).contains(command))
 			return true;
 		return false;
@@ -63,6 +64,19 @@ abstract class BaseStack {
 	}
 
 	protected void setStack(Deque<String> stack) {
-		this.stack = stack;
+		// clone
+		stack.forEach(element->this.stack.add(element));
+	}
+
+	public boolean isUndoCommand(String element) {		
+		return  element.equals(UNDO);
+	}
+	
+	public void executeUndoCommand() {
+		stack.pop();
+	}
+
+	public boolean isClearCommand(String element) {
+		return  element.equals(CLEAR);
 	}
 }

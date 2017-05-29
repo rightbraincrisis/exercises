@@ -9,14 +9,17 @@ import exercise.exception.InsufficientElementsException;
 import exercise.exception.InvalidOperatorOrEquation;
 
 public class Calculator {
+	private AbstractFactory factory;
 	private BaseStack stack;
 	private BaseMathProcessor mathProcessor; 
+	private Caretaker caretaker;
 	int i; // processed element counter only required for error message
 	
 	public Calculator(DataType dataType) {
-		AbstractFactory factory = AbstractFactory.getFactory(dataType);
+		factory = AbstractFactory.getFactory(dataType);
         stack = factory.createStack();
         mathProcessor = factory.createMathProcessor();
+        caretaker = new Caretaker();
 	}
 
 	public boolean process(String line) {		
@@ -31,7 +34,7 @@ public class Calculator {
 			} catch (CustomException e) {
 				System.out.println(
 						"Operator " + e.getMessage() +
-						"(position: " + (ordinalIndexOf(line, " ", i)+2) +
+						" (position: " + (ordinalIndexOf(line, " ", i)+2) +
 						"): insufficient parameters");
 				result = false; break;
 			} catch (Exception e) {
@@ -48,25 +51,38 @@ public class Calculator {
 	private void processElement(String element) throws CustomException, InvalidOperatorOrEquation {
 		try {
 			if (mathProcessor.isOperatorUnary(element)) {
-
-				stack.push(mathProcessor.performUnaryOperation(element, stack.pop()));
-
+				stack.push(mathProcessor.performUnaryOperation(element, stack.pop()));	
+				createMemento();				
 			} else if (mathProcessor.isOperatorBinary(element)) {
-				stack.push(mathProcessor.performBinaryOperation(element, stack.pop(), stack.pop()));
+				String operand2 = stack.pop();
+				String operand1 = stack.pop();
+				stack.push(mathProcessor.performBinaryOperation(element, operand1, operand2));
+				createMemento();
+			} else if (stack.isUndoCommand(element)) {
+				stack = caretaker.getMemento();
 			} else if (stack.isCommand(element)) {
 				stack.executeCommand(element);
-			} else if (mathProcessor.isValidOperand(element)) {
+			}else if (mathProcessor.isValidOperand(element)) {			
 				stack.push(element);
+				createMemento();
 			} else {
 				throw new CustomException(element);
 			}
 		} catch (InsufficientElementsException e) {
+			stack = caretaker.getLatestMemento();
 			throw new CustomException(element);
+			
 		}
 		i++;
 	}
 
-   /*
+   private void createMemento() {
+		BaseStack newStack = factory.createStack();
+		newStack.setStack(stack.getStack());
+		caretaker.addMemento(newStack);
+	}
+
+	/*
     *  This method calculates the position of the invalid element 
     */
 	private static int ordinalIndexOf(String str, String substr, int n) {
