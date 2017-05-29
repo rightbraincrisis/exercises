@@ -8,14 +8,15 @@ import java.util.Deque;
 import java.util.List;
 
 public class BigDecimalStack extends BaseStack{
-
+	private static int DISPLAY_SCALE = ConfigurationVariables.getNumber("BIGDECIMAL.displayScale");
+	
 	@Override
 	public void display(){
 		System.out.print("stack: ");
 		List<String> list = new ArrayList(getStack());
 		Collections.reverse(list);
 		for (String stringElement: list){
-			BigDecimal bd = new BigDecimal(stringElement).setScale(10, RoundingMode.HALF_UP).stripTrailingZeros();
+			BigDecimal bd = new BigDecimal(stringElement).setScale(DISPLAY_SCALE, RoundingMode.FLOOR).stripTrailingZeros();
 			System.out.print(bd.toPlainString() + " ");
 		}
 	}
