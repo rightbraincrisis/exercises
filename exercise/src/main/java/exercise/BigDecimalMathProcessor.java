@@ -88,8 +88,8 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	        	m1 = BigDecimal.class.getMethod(methodName, null);	        	
 	        	result = (BigDecimal) m1.invoke(b1,null);
 	        }    
-	        //System.out.println(result);
-	        //java.lang.NoSuchMethodException
+	        
+	        //good to handle java.lang.NoSuchMethodException 
 
 	    }
 		catch (Exception e) {
