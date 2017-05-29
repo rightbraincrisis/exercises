@@ -3,7 +3,11 @@ package exercise;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import exercise.exception.DivideByZeroException;
 import exercise.exception.InvalidNumberException;
@@ -16,21 +20,26 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	private static RoundingMode ROUNDING_MODE = RoundingMode.FLOOR; //Extension possible: to externalise
 	private static String SUPPORTED_OPERATIONS = ConfigurationVariables.getString("BIGDECIMAL.supportedBinaryOperations");
 	private static String SUPPORTED_UNARY_OPERATIONS = ConfigurationVariables.getString("BIGDECIMAL.supportedUnaryOperations");
+	private static String MAP_OPERATOR_METHOD = ConfigurationVariables.getString("BIGDECIMAL.mapBinaryOperations");
 	
+	private Map<String, String> mapOperatorMethod;
 	
+	public BigDecimalMathProcessor(){
+		loadOperatorMap();
+	}
+	
+	private void loadOperatorMap() {
+		mapOperatorMethod = new HashMap<>();
+		String [] operators = MAP_OPERATOR_METHOD.split(" ");
+		List<String> operatorsList = new ArrayList<>(Arrays.asList(operators));
+		operatorsList.forEach(element -> {		
+			String [] keyValue = element.split("=");
+			mapOperatorMethod.put(keyValue[0], keyValue[1]);			
+		});		
+	}
+
 	public String getMethodName(String op){
-		
-		// extension: externalisation possible
-		String methodName = null;
-		switch (op) {
-		case "+":  methodName = "add"; break;
-		case "-":  methodName = "subtract"; break;
-		case "*":  methodName = "multiply"; break;
-		case "/":  methodName = "custom:divider"; break;
-		case "negate":  methodName = "negate"; break;
-		case "sqrt":  methodName = "custom:sqrt"; break;
-		}
-		return methodName;
+		return mapOperatorMethod.get(op);
 	}
 	
 
@@ -87,6 +96,8 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	    	//Custom common exception because the handling strategy is same.
 	    	throw new InvalidOperatorOrEquation(e.getMessage());
 	    } 			
+		
+		result = result.setScale(SCALE, ROUNDING_MODE);
 		return result.toPlainString();		
 	}
 	

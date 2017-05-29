@@ -18,7 +18,7 @@ import java.math.RoundingMode;
 public class BigDecimalSqrtHelper {
 	private static final BigDecimal SQRT_DIG = new BigDecimal(150);
 	private static final BigDecimal SQRT_PRE = new BigDecimal(10).pow(SQRT_DIG.intValue());
-	private static RoundingMode ROUNDING_MODE= RoundingMode.HALF_UP; //Extension possible: to externalise
+	private static RoundingMode ROUNDING_MODE= RoundingMode.FLOOR; //Extension possible: to externalise
 
 	/**
 	 * Private utility method used to compute the square root of a BigDecimal.
