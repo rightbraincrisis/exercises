@@ -10,7 +10,7 @@ public class DoubleMathProcessor extends BaseMathProcessor {
 	public String getMethodName(String op) {
 		// Cannot use because you cannot overload binary operators like + - *, etc.
 		// hence going with switch case in the following method.
-		return null;
+		return op;
 	}
 
 	@Override
