@@ -10,14 +10,12 @@ import exercise.exception.InvalidOperatorOrEquation;
 
 public class Calculator {
 	private AbstractFactory factory;
-	private BaseStack stack;
 	private BaseMathProcessor mathProcessor; 
 	private Caretaker caretaker;
 	int i; // processed element counter only required for error message
 	
 	public Calculator(DataType dataType) {
 		factory = AbstractFactory.getFactory(dataType);
-        stack = factory.createStack();
         mathProcessor = factory.createMathProcessor();
         caretaker = new Caretaker();
 	}
@@ -43,50 +41,47 @@ public class Calculator {
 			}
 		}
 		
-		if(stack != null) stack.display();
-		else{
-			System.out.println("stack: ");
-			result = false;
-		}
+		if(caretaker.getLatestMemento() != null) 
+			caretaker.getLatestMemento().display();
+		else
+			System.out.print("stack: ");
 		
 		return result;
 	}
 
-
-
+	
 	private void processElement(String element) throws CustomException, InvalidOperatorOrEquation {
-		try {
+		
+		try {			
+			
+			BaseStack stack = factory.createStack();
+			if(caretaker.size() > 0)
+				stack.setStack(caretaker.getLatestMemento().getStack());
+			
 			if (mathProcessor.isOperatorUnary(element)) {
 				stack.push(mathProcessor.performUnaryOperation(element, stack.pop()));	
-				createMemento();				
+				caretaker.pushMemento(stack);				
 			} else if (mathProcessor.isOperatorBinary(element)) {
 				String operand2 = stack.pop();
 				String operand1 = stack.pop();
 				stack.push(mathProcessor.performBinaryOperation(element, operand1, operand2));
-				createMemento();
-			} else if (stack.isUndoCommand(element)) {
-				stack = caretaker.getMemento();
-			} else if (stack.isCommand(element)) {
-				stack.executeCommand(element);
+				caretaker.pushMemento(stack);
+			} else if (caretaker.isUndoCommand(element)) {
+				caretaker.popMemento();
+			} else if (caretaker.isClearCommand(element)) {
+				caretaker.clear();
 			}else if (mathProcessor.isValidOperand(element)) {			
 				stack.push(element);
-				createMemento();
+				caretaker.pushMemento(stack);
 			} else {
 				throw new CustomException(element);
 			}
 		} catch (InsufficientElementsException e) {
-			stack = caretaker.getLatestMemento();
 			throw new CustomException(element);
-			
 		}
 		i++;
 	}
 
-   private void createMemento() {
-		BaseStack newStack = factory.createStack();
-		newStack.setStack(stack.getStack());
-		caretaker.addMemento(newStack);
-	}
 
 	/*
     *  This method calculates the position of the invalid element 
