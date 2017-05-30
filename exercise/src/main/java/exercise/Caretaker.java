@@ -8,6 +8,13 @@ import exercise.exception.InsufficientElementsException;
 public class Caretaker {
 	
 	private Deque<BaseStack> mementos;
+	
+	/**
+	 *  Deque is chosen because it gives true functionality of 
+	 *  stack using Linkedlist. The class Stack<E> provided by java is just an 
+	 *  extension of Vector.
+	 */
+	
 	private static final String CLEAR = "clear";
 	private static final String UNDO = "undo";
 	//Extension possible to externalise clear & undo
