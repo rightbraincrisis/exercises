@@ -21,8 +21,12 @@ public class Caretaker {
     }
 
     public BaseStack popMemento() throws InsufficientElementsException{
+    	// Design decision:
+    	// UNDO on empty stack throws exception
+    	
     	if(mementos.isEmpty()) throw new  InsufficientElementsException("No elements to pop");
     	else mementos.pop();
+    	
         return mementos.peek();
     }
     
