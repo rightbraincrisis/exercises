@@ -15,6 +15,7 @@ import exercise.exception.InvalidOperatorOrEquation;
 
 public class BigDecimalMathProcessor extends BaseMathProcessor {
 	
+	private static final String NO_SUCH_OPERATION_DIVIDE_BY_ZERO_INVALID_OPERAND = ": No such operation / Divide by zero / Invalid operand";
 	private static final String CUSTOM = "custom:";
 	private static int SCALE = ConfigurationVariables.getNumber("BIGDECIMAL.storageScale");
 	private static RoundingMode ROUNDING_MODE = RoundingMode.FLOOR; //Extension possible: to externalise
@@ -65,7 +66,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	        	        
 	      //Common exception: Because the action of the exception is same.
 	    }  catch (Exception e) {
-	        throw new InvalidOperatorOrEquation("No such operation / Divide by zero / Invalid operand");
+	        throw new InvalidOperatorOrEquation( operator + NO_SUCH_OPERATION_DIVIDE_BY_ZERO_INVALID_OPERAND);
 	    } 
 		
 		result = result.setScale(SCALE, ROUNDING_MODE);
@@ -94,7 +95,7 @@ public class BigDecimalMathProcessor extends BaseMathProcessor {
 	    }
 		catch (Exception e) {
 	    	//Custom common exception because the handling strategy is same.
-	    	throw new InvalidOperatorOrEquation(e.getMessage());
+	    	throw new InvalidOperatorOrEquation(operator + NO_SUCH_OPERATION_DIVIDE_BY_ZERO_INVALID_OPERAND);
 	    } 			
 		
 		result = result.setScale(SCALE, ROUNDING_MODE);
