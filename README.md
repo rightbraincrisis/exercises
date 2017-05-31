@@ -10,6 +10,7 @@ This README document the steps RPN Calculator up and running.
 
 * Import / build it as a standard maven project
 * Run it from command line or eclipse
+* Type exit to quit
 
 ### The next version will include ###
 
