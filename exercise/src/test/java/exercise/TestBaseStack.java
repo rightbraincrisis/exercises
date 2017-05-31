@@ -25,6 +25,7 @@ public class TestBaseStack {
 	}
 
 	@Test
+	@Ignore
 	public void testExerciseValues() {
 		assertEquals("Case 1: ", calculator.process("2 1 +"), true);
 	}
