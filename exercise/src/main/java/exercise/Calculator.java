@@ -9,6 +9,7 @@ import exercise.exception.InsufficientElementsException;
 import exercise.exception.InvalidOperatorOrEquation;
 
 public class Calculator {
+	private static final String EXIT = "exit";
 	private AbstractFactory factory;
 	private BaseMathProcessor mathProcessor; 
 	private Caretaker caretaker;
@@ -20,25 +21,27 @@ public class Calculator {
         caretaker = new Caretaker();
 	}
 
-	public boolean process(String line) {		
-		boolean result = true;
+	public boolean process(String line) {
+		if (line.equalsIgnoreCase(EXIT)) return false;
+		boolean canContinue = false;
 		i = 0; 
 		// Note the word whitespace and not spaces
 		List<String> elements = new ArrayList<String>(Arrays.asList(line.split("\\s")));
 
 		for(String element: elements){
 			try {
-				processElement(element);
-			} catch (CustomException e) {
+				canContinue = processElement(element);
+			} catch (CustomException |InvalidOperatorOrEquation e) {
 				System.out.println(
 						"Operator " + e.getMessage() +
 						" (position: " + (ordinalIndexOf(line, " ", i)+2) +
 						"): insufficient parameters");
-				result = false; break;
+				canContinue = false;
 			} catch (Exception e) {
-				System.out.println("Exception: " + e.getMessage());
-				result = false; break;
+				System.out.println("Exception: invalid / insufficient parameters");
+				canContinue = false; 
 			}
+			if(canContinue == false) break;
 		}
 		
 		if(caretaker.getLatestMemento() != null) 
@@ -46,12 +49,13 @@ public class Calculator {
 		else
 			System.out.print("stack: ");
 		
-		return result;
+		return true;
 	}
 
 	
-	private void processElement(String element) throws CustomException, InvalidOperatorOrEquation {
+	private boolean processElement(String element) throws CustomException, InvalidOperatorOrEquation {
 		
+		boolean result = true;
 		try {			
 			
 			BaseStack stack = factory.createStack();
@@ -80,6 +84,8 @@ public class Calculator {
 			throw new CustomException(element);
 		}
 		i++;
+		
+		return result;
 	}
 
 
@@ -93,4 +99,5 @@ public class Calculator {
 		return pos;
 	}
 
+	
 }
