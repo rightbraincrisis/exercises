@@ -37,7 +37,7 @@ public class DoubleMathProcessor extends BaseMathProcessor {
 		Double result = null;
 		switch(operator){
 			case "sqrt": {
-				if(d1<0) throw new InvalidOperatorOrEquation("sqrt operation of negative number");	
+				if(d1<0) throw new InvalidOperatorOrEquation(operator);	
 				result = Math.sqrt(d1); break;
 			
 			}
